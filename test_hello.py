@@ -1,11 +1,8 @@
-from main import say_hello
+from click.testing import CliRunner
+from hello import hello
 
-def test_say_hello(capsys):
-    # 1. Call the function
-    say_hello()
-    
-    # 2. Read the captured standard output and standard error
-    captured = capsys.readouterr()
-    
-    # 3. Assert the output matches (print() adds a newline character by default)
-    assert captured.out == "Hello\n"
+def test_hello():
+    runner = CliRunner()
+    result = runner.invoke(hello, ["--name", "Thor",
+        "--color", "blue"])
+    assert "Thor" in result.output
