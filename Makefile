@@ -1,6 +1,8 @@
 # Declare these targets as "phony". This tells make that these names are commands, not real files # to look for. Without .PHONY, make could get confused if a file named "install", "test", or "all" # exists in the project directory.
 .PHONY: install lint flakeit reformat test all
 
+hello:
+	echo "This is the first command"
 # Install or update project dependencies.
 # Run with: make install
 install:
