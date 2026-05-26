@@ -4,22 +4,22 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - name: Checkout repository
+      uses: actions/checkout@v6
+      
     - name: Set up Python 3.10.20
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
-        python-version: 3.10.20
+        python-version: "3.10.20"
+        
     - name: Install dependencies
-      run: |
-        make install
+      run: make install
+      
     - name: Lint with pylint
-      run: |
-        make lint
+      run: make lint
+      
     - name: Test with pytest
-      run: |
-        make test
-    
+      run: make test
