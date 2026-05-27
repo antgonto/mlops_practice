@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 #v6.0.2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@sha256:c51964d8d5d1d95dca909835528c02e777776ea420e29383cb3065b8a83a659c #v2.25.5
         with:
           languages: ${{ matrix.language }}
           queries: security-extended,security-and-quality
