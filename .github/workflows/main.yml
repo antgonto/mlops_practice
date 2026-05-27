@@ -20,10 +20,17 @@ jobs:
         python-version: "3.10.20"
         
     - name: Install dependencies
-      run: make install
+      run: |
+        make install
       
     - name: Lint with pylint
-      run: make lint
+      run: |
+        make lint
+
+    - name: format code
+      run: |
+        make format
       
     - name: Test with pytest
-      run: make test
+      run: |
+        make test
