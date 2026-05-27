@@ -1,0 +1,45 @@
+name: Dependabot Auto-Merge
+on: pull_request
+permissions:
+  pull-requests: write
+  contents: write
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    # ONLY run this job if the PR author is Dependabot
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      # ---------------------------------------------------------
+      # SCENARIO 1: Routine Version Updates (The Janitor)
+      # Auto-merge only if it is a safe Minor or Patch update.
+      # Block Major updates for manual human review.
+      # ---------------------------------------------------------
+      - name: Auto-merge Routine Updates (Minor/Patch only)
+        if: |
+          steps.metadata.outputs.update-type != 'version-update:semver-major' &&
+          !contains(github.event.pull_request.labels.*.name, 'security')
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # ---------------------------------------------------------
+      # SCENARIO 2: Emergency Security Updates (The Responder)
+      # Auto-merge immediately to patch vulnerabilities, relying 
+      # on your CI/CD test suite to catch any breaking changes.
+      # ---------------------------------------------------------
+      - name: Auto-merge Security Patches
+        if: contains(github.event.pull_request.labels.*.name, 'security')
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
